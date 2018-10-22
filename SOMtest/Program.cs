@@ -66,7 +66,9 @@ namespace SOMtest
             }
 
             Console.Beep();
+            Console.WriteLine();
             Console.WriteLine("Training complete! Learning rate: " + learningRate + ", Radius: " + radius);
+            Console.WriteLine();
             int neuroncounter = 1;
             foreach (var neuron in mynet.Layers[0].Neurons)
             {
