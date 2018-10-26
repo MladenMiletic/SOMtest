@@ -62,7 +62,10 @@ namespace SOMtest
                         break;
                     }
                 }
-                Console.WriteLine("Epoch " + j);
+                if (j % 25 == 0)
+                {
+                    Console.WriteLine("Epoch " + j);
+                }
             }
 
             Console.Beep();
@@ -85,12 +88,40 @@ namespace SOMtest
                 Console.WriteLine("]");
                 neuroncounter++;
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Neuron distance matrix!");
+            Console.WriteLine();
+            DisplayDistanceMatrix(mynet.Layers[0]);
             
 
             Console.WriteLine("Press any key to start over!");
             Console.ReadKey();
             goto Again;
             
+        }
+
+        private static void DisplayDistanceMatrix(Layer layer)
+        {
+            for (int i = 0; i < layer.Neurons.Count(); i++)
+            {
+                Console.Write("\n");
+                for (int j = 0; j < layer.Neurons.Count(); j++)
+                {
+                    Console.Write("{0:00.00}\t", GetEuclideanDistance(layer.Neurons[i], layer.Neurons[j]));
+                }
+            Console.Write("\n\n");
+            }
+        }
+
+        public static double GetEuclideanDistance(Neuron a, Neuron b)
+        {
+            double sumSquares = 0;
+            for (int i = 0; i < a.Weights.Count();i++)
+            {
+                sumSquares = sumSquares + Math.Pow((a.Weights[i] - b.Weights[i]), 2);
+            }
+            return Math.Sqrt(sumSquares);
         }
     }
 }
