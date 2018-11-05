@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="NormalizedData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="ResultsUnique.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

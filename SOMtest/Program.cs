@@ -25,6 +25,8 @@ namespace SOMtest
             double radius = Convert.ToDouble(Console.ReadLine());
             Console.Write("Please input epoch count: ");
             int epochs = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Please enter filename: ");
+            string filename = Console.ReadLine();
 
             int iterations = 13300;
             //double learningRate = 0.1;
@@ -33,7 +35,7 @@ namespace SOMtest
             Console.ReadKey();
             
             int dimensionCount = 8;
-            Neuron.RandRange = new Range(0, 10);
+            Neuron.RandRange = new Range(0, 1);
             DistanceNetwork mynet = new DistanceNetwork(dimensionCount, neuronCount);
             mynet.Randomize();
 
@@ -44,7 +46,8 @@ namespace SOMtest
             //int epochs = 200;
             for (int j = 0; j < epochs; j++)
             {
-                var reader = new StreamReader("ResultsUnique.csv");
+                //var reader = new StreamReader("ResultsUnique.csv");
+                var reader = new StreamReader("NormalizedData.csv");
                 trainer.LearningRate = driftingLearningRate * (epochs - j) / epochs + fixedLearningRate;
                 trainer.LearningRadius = (double)radius * (epochs - j) / epochs;
                 while (!reader.EndOfStream)
@@ -92,7 +95,7 @@ namespace SOMtest
             Console.WriteLine();
             Console.WriteLine("Neuron distance matrix!");
             Console.WriteLine();
-            DisplayDistanceMatrix(mynet.Layers[0]);
+            DisplayDistanceMatrix(mynet.Layers[0], filename);
             
 
             Console.WriteLine("Press any key to start over!");
@@ -112,6 +115,31 @@ namespace SOMtest
                 }
             Console.Write("\n\n");
             }
+        }
+        private static void DisplayDistanceMatrix(Layer layer, string filename)
+        {
+            var csv = new StringBuilder();
+            for (int i = 0; i < layer.Neurons.Count(); i++)
+            {
+                string newLine = "";
+                Console.Write("\n");
+                for (int j = 0; j < layer.Neurons.Count(); j++)
+                {
+                    newLine = newLine + string.Format("{0:0.00}", GetEuclideanDistance(layer.Neurons[i], layer.Neurons[j]));
+                    Console.Write("{0:0.00}\t", GetEuclideanDistance(layer.Neurons[i], layer.Neurons[j]));
+                    if (j != layer.Neurons.Count() - 1)
+                    {
+                        newLine = newLine + ",";
+                    }
+                    else
+                    {
+                        csv.AppendLine(newLine);
+                    }
+                }
+
+                Console.Write("\n\n");
+            }
+            File.WriteAllText(filename, csv.ToString());
         }
 
         public static double GetEuclideanDistance(Neuron a, Neuron b)
